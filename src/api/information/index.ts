@@ -38,6 +38,9 @@ export function getmeReadById(id: number | string) {
 export function saveOrUpdate(params: Partial<InformationInterface>) {
   return http.post(`/app/information/saveOrUpdate`, params);
 }
+export function saveOrUpdate3(params: Partial<InformationInterface>) {
+  return http.post(`/app/information/saveOrUpdate3`, params);
+}
 export function getfulFriendList(params: ReqPage) {
   return http.get<PageRes<nwFriendsInterface>>(
     `/app/information/getFriend`,

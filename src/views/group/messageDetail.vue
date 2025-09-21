@@ -140,7 +140,7 @@ onMounted(async () => {
       <footer>
         <el-button @click="sendpinglun">点我来当键盘侠！键来</el-button>
         <div>总得有个结尾吧</div>
-        <p>版权所有 &copy; 2024 超绝vue</p>
+        <p>版权所有 &copy; 2025 超绝vue</p>
       </footer>
     </body>
   </html>

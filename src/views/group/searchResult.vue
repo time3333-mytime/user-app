@@ -1,11 +1,8 @@
 <template>
-  <input v-model="search" placeholder="你想搜索什么" />
-  <el-button @click="doSearch">点击搜索</el-button>
-  <hr />
   <router-view :key="$route.fullPath"></router-view>
   <div class="bg-[--color-block-background]">
     <PullDownRefreshContainer
-      :request="getMessageListHandler"
+      :request="wrappedHandler"
       ref="pullDownRefreshContainerRef"
       class="min-h-[70vh]"
     >
@@ -36,7 +33,7 @@ import PullDownRefreshContainer from "@/components/PullDownRefreshContainer/Pull
 import { useRoute, useRouter } from "vue-router";
 import type { MessageInterface } from "@/api/message/types";
 import type { ReqPage } from "@/api/types";
-import { getMessageList } from "@/api/message";
+import { getMessageList, getMessageList2 } from "@/api/message";
 import MessageCard from "@/components/MessageCard/MessageCard.vue";
 import type { UserInfoInterface } from "@/api/user/types";
 import { changeName } from "@/api/user";
@@ -47,17 +44,20 @@ const router = useRouter();
 const MessageList = ref<MessageInterface[]>([]);
 let search = ref<string>("");
 const route = useRoute();
-const doSearch = () => {
-  if (!search.value.trim()) return;
-  router.push({ path: "/searchResult", query: { keyword: search.value } });
-};
+const keyword = ref<string>((route.query.keyword as string) || "");
 const sendtiezi = () => {
   router.push({ path: "/fatiezi" });
 };
-
-async function getMessageListHandler(pageInfo: ReqPage) {
+async function wrappedHandler(pageInfo: ReqPage) {
+  return await getMessageListHandler2({
+    ...pageInfo,
+    keyword: keyword.value
+  });
+}
+async function getMessageListHandler2(params: ReqPage & { keyword?: string }) {
+  console.log(312323453424, params);
   // 调用接口
-  let { data } = await getMessageList(pageInfo);
+  let { data } = await getMessageList2(params);
   let targetRecords = data.records.map(item => {
     return {
       id: item.id,
@@ -73,7 +73,7 @@ async function getMessageListHandler(pageInfo: ReqPage) {
       sendTime: item.sendTime || ""
     };
   }) as unknown as MessageInterface[];
-  if (pageInfo.current === 1) {
+  if (params.current === 1) {
     MessageList.value = targetRecords;
   } else {
     MessageList.value = [...MessageList.value, ...targetRecords];

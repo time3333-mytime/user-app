@@ -16,6 +16,7 @@ import type {
   TermInfoInterface
 } from "@/api/search/types";
 import type { PageRes, ReqPage } from "@/api/types";
+import type { TalkInterface } from "@/api/message/types";
 /**
  * @description 分页查询房间列表
  * @param params
@@ -65,6 +66,9 @@ export function getPaymentTypeList() {
  */
 export function getRoomDetailById(id: number | string) {
   return http.get<RoomDetailInterface>(`/app/room/getDetailById?id=${id}`);
+}
+export function getTalkDetailById(id: number | string) {
+  return http.get<TalkInterface[]>(`/app/room/getTalkDetailById?id=${id}`);
 }
 
 /**

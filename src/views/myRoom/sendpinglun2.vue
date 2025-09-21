@@ -1,22 +1,12 @@
 <template>
   <div class="container">
-    <h2>报修界面</h2>
+    <h2>发评论</h2>
     <form id="postForm" enctype="multipart/form-data">
       <div class="form-group">
-        <label for="title">报修房间id：</label>
-        <input
-          type="text"
-          v-model="form.subject"
-          id="title"
-          name="title"
-          required
-        />
-      </div>
-      <div class="form-group">
-        <label for="content">详细描述：</label>
+        <label for="content">评论内容：</label>
         <textarea
           id="content"
-          v-model="form.message"
+          v-model="form.talk"
           name="content"
           rows="10"
           required
@@ -39,14 +29,14 @@
         </template>
       </el-upload>
       <div class="form-group">
-        <button @click="submitHandle">提交报修</button>
+        <button @click="submitHandle">提交评论</button>
       </div>
     </form>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onUpdated, reactive, ref } from "vue";
+import { onMounted, onUpdated, reactive, ref } from "vue";
 
 import {
   ElMessage,
@@ -55,18 +45,23 @@ import {
   type UploadProps
 } from "element-plus";
 import { useUserStore } from "@/store/modules/user";
+import { saveOrUpdatepinglun, saveOrUpdatetiezi } from "@/api/message";
+import type { MessageInterface, TalkInterface } from "@/api/message/types";
+import { useRoute, useRouter } from "vue-router";
 import router from "@/router";
-import { saveOrUpdatetiezi, saveOrUpdateWorry } from "@/api/message";
-import type { MessageInterface } from "@/api/message/types";
+
+const route = useRoute();
 
 const handleRemove: UploadProps["onRemove"] = (uploadFile, uploadFiles) => {
   console.log(uploadFile, uploadFiles);
 };
-const form = ref<MessageInterface>({
+const form = ref<TalkInterface>({
   id: "",
+  mid: "",
   sendTime: "",
-  subject: "",
-  message: "",
+  senduserid: "",
+  talk: "",
+  status: "3",
   userid: "",
   userInfo: { nickname: " ", avatarUrl: " " },
   graphVoList: [
@@ -86,14 +81,20 @@ async function submitHandle() {
     nickname: userStore.userInfo.nickname ?? "默认昵称", // 使用 null 合并运算符 ?? 提供默认值
     url: userStore.userInfo.avatarUrl ?? "默认URL" // 同样使用 ?? 提供默认值
   };
+  form.value.mid = route.query.id;
   form.value.userInfo = safeUserInfo;
-  alert("报修成功，管理员将处理");
-  router.push({ path: "/myRoom" });
+  alert("发送成功");
+  router.push({
+    path: "/roomDetail",
+    query: {
+      id: route.query.id
+    }
+  });
   await saveOrUpdateHandle();
 }
 async function saveOrUpdateHandle() {
   try {
-    await saveOrUpdateWorry(form.value);
+    await saveOrUpdatepinglun(form.value);
   } catch (error) {
     console.log(error);
   }

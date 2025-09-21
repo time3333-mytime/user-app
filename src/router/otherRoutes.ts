@@ -32,6 +32,24 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    name: "sendpinglun2",
+    path: "/sendpinglun2",
+    component: () => import("@/views/myRoom/sendpinglun2.vue"),
+    meta: {
+      title: "房间发送评论",
+      noCache: true
+    }
+  },
+  {
+    name: "search",
+    path: "/searchResult",
+    component: () => import("@/views/group/searchResult.vue"),
+    meta: {
+      title: "关键词查找",
+      noCache: true
+    }
+  },
+  {
     name: "jiahaoyou",
     path: "/jiahaoyou",
     component: () => import("@/views/message/jiahaoyou.vue"),

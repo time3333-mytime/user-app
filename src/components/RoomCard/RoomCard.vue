@@ -27,6 +27,12 @@
         <!--      价格-->
         <span class="text-red-500 text-[14px]">￥</span>
         <span class="text-red-500 text-[20px]">{{ data.rent }}</span>
+        <div class="flex mt-[10px]">
+          <div class="flex ml-[10px]">
+            <van-icon name="comment-o" size="20" />
+            <div class="ml-[5px]">点击评论快来一起参与讨论</div>
+          </div>
+        </div>
       </slot>
     </template>
     <!--    thumb-->
@@ -58,7 +64,6 @@
     </template>
   </van-card>
 </template>
-
 <script setup lang="ts">
 import type { RoomInterface } from "@/api/search/types";
 import type { PropType } from "vue";
